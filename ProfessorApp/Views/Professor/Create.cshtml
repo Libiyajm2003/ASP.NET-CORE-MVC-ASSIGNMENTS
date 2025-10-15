@@ -1,0 +1,109 @@
+﻿@model ProfessorApp.Models.Professor
+@{
+    ViewData["Title"] = "Add Professor";
+    var departments = ViewBag.Departments as List<ProfessorApp.Models.Department>;
+}
+
+<h3>Add New Professor</h3>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="row">
+        <div class="form-group">
+            <label asp-for="ManagerId" class="form-label">Manager ID</label>
+            <input asp-for="ManagerId" class="form-control" />
+            <span asp-validation-for="ManagerId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Gender" class="form-label">Gender</label>
+            <select asp-for="Gender" class="form-select">
+                <option value="">-- Select Gender --</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+            </select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label asp-for="FirstName" class="form-label">First Name</label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LastName" class="form-label">Last Name</label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label asp-for="DeptNo" class="form-label">Department</label>
+            <select asp-for="DeptNo" class="form-select" id="DeptNo">
+                <option value="">-- Select Department --</option>
+                @foreach (var dept in departments)
+                {
+                    <option value="@dept.DeptNo">@dept.DeptName</option>
+                }
+            </select>
+            <span asp-validation-for="DeptNo" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DeptName" class="form-label">Department Name</label>
+            <input asp-for="DeptName" class="form-control" id="DeptName" readonly />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label asp-for="Salary" class="form-label">Salary</label>
+            <input asp-for="Salary" class="form-control" />
+            <span asp-validation-for="Salary" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="JoiningDate" class="form-label">Joining Date</label>
+            <input asp-for="JoiningDate" type="date" class="form-control" />
+            <span asp-validation-for="JoiningDate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
+            <input asp-for="DateOfBirth" type="date" class="form-control" />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Save Professor</button>
+    <a asp-action="List" class="btn btn-secondary mt-3 ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        var deptData = {
+            @for (int i = 0; i < departments.Count; i++)
+            {
+                    var d = departments[i];
+                    <text>"@d.DeptNo": "@d.DeptName"@((i < departments.Count - 1) ? "," : "")</text>
+            }
+        };
+
+        var deptDropdown = document.getElementById("DeptNo");
+        deptDropdown.addEventListener("change", function () {
+            var selectedId = this.value;
+            document.getElementById("DeptName").value = selectedId ? deptData[selectedId] : "";
+        });
+    </script>
+}

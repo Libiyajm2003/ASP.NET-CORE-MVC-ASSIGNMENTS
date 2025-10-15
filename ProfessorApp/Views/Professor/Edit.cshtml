@@ -1,0 +1,108 @@
+﻿@model ProfessorApp.Models.Professor
+
+<h4>Edit Professor</h4>
+<form asp-action="Edit" method="post">
+    <!-- Professor ID -->
+    <div class="form-group">
+        <label asp-for="ProfessorId" class="control-label">Professor ID:</label>
+        <input asp-for="ProfessorId" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Manager ID</label>
+        <input asp-for="ManagerId" class="form-control" />
+        <span asp-validation-for="ManagerId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>First Name</label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Last Name</label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Gender</label>
+        <select asp-for="Gender" class="form-control">
+            <option value="">Select Gender</option>
+            <option value="Male" selected="@(Model.Gender == "Male")">Male</option>
+            <option value="Female" selected="@(Model.Gender == "Female")">Female</option>
+            <option value="Other" selected="@(Model.Gender == "Other")">Other</option>
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Department</label>
+        <select asp-for="DeptNo" class="form-control" id="DeptNo">
+            <option value="">Select Department</option>
+            @foreach (var dept in ViewBag.Departments)
+            {
+                if (Model.DeptNo == dept.DeptNo)
+                {
+                    <option value="@dept.DeptNo" selected>@dept.DeptName</option>
+                }
+                else
+                {
+                    <option value="@dept.DeptNo">@dept.DeptName</option>
+                }
+            }
+        </select>
+        <span asp-validation-for="DeptNo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Department Name</label>
+        <input id="DeptName" name="DeptName" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Salary</label>
+        <input asp-for="Salary" class="form-control" />
+        <span asp-validation-for="Salary" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Joining Date</label>
+        <input asp-for="JoiningDate" type="date" class="form-control" />
+        <span asp-validation-for="JoiningDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Date of Birth</label>
+        <input asp-for="DateOfBirth" type="date" class="form-control" />
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Update</button>
+    <a asp-action="List" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        // Department name lookup data
+        var deptData = {
+            @foreach (var d in ViewBag.Departments)
+            {
+                        <text>"@d.DeptNo": "@d.DeptName",</text>
+            }
+        };
+
+        var dropdown = document.getElementById("DeptNo");
+        var deptName = document.getElementById("DeptName");
+
+        function updateDeptName() {
+            deptName.value = deptData[dropdown.value] || "";
+        }
+
+        dropdown.addEventListener("change", updateDeptName);
+        updateDeptName(); // set initial value
+    </script>
+}
