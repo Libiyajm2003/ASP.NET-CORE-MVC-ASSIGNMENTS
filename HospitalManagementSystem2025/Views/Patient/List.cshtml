@@ -1,0 +1,61 @@
+﻿@model IEnumerable<HospitalManagementSystem2025.Models.Patient>
+
+@{
+    ViewData["Title"] = "List of Patients";
+}
+
+<h1 class="mb-4">List of Patients</h1>
+
+<a asp-controller="Patient" asp-action="Create" class="btn btn-primary mb-3"> Add New Patient</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().PatientId)</th>
+            <th>@Html.DisplayNameFor(model => model.First().RegistrationNo)</th>
+            <th>@Html.DisplayNameFor(model => model.First().PatientName)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Dob)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Gender)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Address)</th>
+            <th>@Html.DisplayNameFor(model => model.First().PhoneNo)</th>
+            <th>@Html.DisplayNameFor(model => model.First().MemberDescription)</th>
+            <th>@Html.DisplayNameFor(model => model.First().InsuredAmount)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.PatientId</td>
+                    <td>@item.RegistrationNo</td>
+                    <td>@item.PatientName</td>
+                    <td>@item.Dob?.ToString("dd-MM-yyyy")</td>
+                    <td>@item.Gender</td>
+                    <td>@item.Address</td>
+                    <td>@item.PhoneNo</td>
+                    <td>@item.MemberDescription</td>
+                    <td>@item.InsuredAmount</td>
+
+                    <td>
+                        <a asp-controller="Patient" asp-action="Edit"
+                           asp-route-id="@item.PatientId"
+                           class="btn btn-secondary">Edit</a>
+
+                        <a asp-controller="Patient" asp-action="Delete"
+                           asp-route-id="@item.PatientId"
+                           class="btn btn-danger">Remove</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="10" class="text-center text-muted">No patients found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

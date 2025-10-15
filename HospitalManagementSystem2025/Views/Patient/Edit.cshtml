@@ -1,0 +1,128 @@
+﻿@model Patient
+@*
+
+*@
+@{
+
+}
+
+<h4>Edit Patient</h4>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="PatientId" />
+
+    <div class="form-group mb-2">
+        <label>Registration No</label>
+        <input asp-for="RegistrationNo" class="form-control" readonly />
+        <span asp-validation-for="RegistrationNo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label>Patient Name</label>
+        <input asp-for="PatientName" class="form-control" />
+        <span asp-validation-for="PatientName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label>DOB</label>
+        <input asp-for="Dob" type="date" class="form-control" />
+        <span asp-validation-for="Dob" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label>Gender</label>
+        <select asp-for="Gender" class="form-control">
+            <option value="">Select Gender</option>
+            @if (Model.Gender == "Male")
+            {
+                <option value="Male" selected>Male</option>
+            }
+            else
+            {
+                <option value="Male">Male</option>
+            }
+
+            @if (Model.Gender == "Female")
+            {
+                <option value="Female" selected>Female</option>
+            }
+            else
+            {
+                <option value="Female">Female</option>
+            }
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label>Address</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label>Phone No</label>
+        <input asp-for="PhoneNo" class="form-control" />
+        <span asp-validation-for="PhoneNo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Membership</label>
+        <select id="MembershipId" asp-for="MembershipId" class="form-control">
+            <option value="">Select Membership</option>
+            @foreach (var m in ViewBag.Memberships)
+            {
+                if (Model.MembershipId == m.MembershipId)
+                {
+                    <option value="@m.MembershipId" selected>@m.MemberDescription</option>
+                }
+                else
+                {
+                    <option value="@m.MembershipId">@m.MemberDescription</option>
+                }
+            }
+        </select>
+        <span asp-validation-for="MembershipId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label>Member Description</label>
+        <input id="MemberDescription" name="MemberDescription" class="form-control" readonly
+               value="@((Model.MembershipId != null) ? 
+                       ((IEnumerable<dynamic>)ViewBag.Memberships).FirstOrDefault(x => x.MembershipId == Model.MembershipId)?.MemberDescription : "")" />
+    </div>
+
+    <div class="form-group mb-2">
+        <label>Insured Amount</label>
+        <input id="InsuredAmount" name="InsuredAmount" class="form-control" readonly
+               value="@((Model.MembershipId != null) ? 
+                       ((IEnumerable<dynamic>)ViewBag.Memberships).FirstOrDefault(x => x.MembershipId == Model.MembershipId)?.InsuredAmount : "")" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Update</button>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        var membershipData = {
+            @for (int i = 0; i < ((IEnumerable<dynamic>)ViewBag.Memberships).Count(); i++)
+            {
+                var m = ((IEnumerable<dynamic>)ViewBag.Memberships).ElementAt(i);
+                <text>"@m.MembershipId": { MemberDescription: "@m.MemberDescription", InsuredAmount: "@m.InsuredAmount" }@((i < ((IEnumerable<dynamic>)ViewBag.Memberships).Count() - 1) ? "," : "")</text>
+            }
+        };
+
+        var membershipDropdown = document.getElementById("MembershipId");
+        membershipDropdown.addEventListener("change", function () {
+            var selectedId = this.value;
+            if (selectedId && membershipData[selectedId]) {
+                document.getElementById("MemberDescription").value = membershipData[selectedId].MemberDescription;
+                document.getElementById("InsuredAmount").value = membershipData[selectedId].InsuredAmount || "";
+            } else {
+                document.getElementById("MemberDescription").value = "";
+                document.getElementById("InsuredAmount").value = "";
+            }
+        });
+    </script>
+}
